@@ -1,0 +1,62 @@
+# Values for prometheus-adapter Helm chart
+# Конфигурация для преобразования Prometheus метрик в Kubernetes custom metrics
+
+prometheus:
+  # URL к Prometheus серверу
+  url: http://prometheus-server.default.svc.cluster.local
+  port: 80
+  path: ""
+
+# Правила для custom метрик
+rules:
+  default: true
+  custom:
+  # Метрика RPS (requests per second) на под
+  - seriesQuery: 'http_requests_total{namespace!="",pod!=""}'
+    resources:
+      overrides:
+        namespace: {resource: "namespace"}
+        pod: {resource: "pod"}
+    name:
+      matches: "^http_requests_total"
+      as: "requests_per_second"
+    metricsQuery: |
+      sum(
+        rate(<<.Series>>{<<.LabelMatchers>>}[1m])
+      ) by (<<.GroupBy>>)
+
+  # Альтернативная метрика для RPS с более точным расчетом
+  - seriesQuery: 'http_requests_total{job="scaletestapp",namespace!="",pod!=""}'
+    resources:
+      overrides:
+        namespace: {resource: "namespace"}
+        pod: {resource: "pod"}
+    name:
+      matches: "^http_requests_total"
+      as: "http_requests_per_second"
+    metricsQuery: |
+      sum(
+        rate(<<.Series>>{<<.LabelMatchers>>,job="scaletestapp"}[30s])
+      ) by (<<.GroupBy>>)
+
+# Ресурсы для адаптера
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# Репликация для высокой доступности (для production)
+replicas: 1
+
+# Log level для отладки
+logLevel: 4
+
+# Метрики самого адаптера
+metricsRelistInterval: 30s
+
+# Настройки для связи с API сервером
+apiServiceConfig:
+  insecureSkipTLSVerify: true

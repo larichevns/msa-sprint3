@@ -1,0 +1,15 @@
+22m         Normal    SuccessfulCreate               replicaset/scaletestapp-866dd9cf84                Created pod: scaletestapp-866dd9cf84-lb6j6
+22m         Normal    Started                        pod/scaletestapp-866dd9cf84-lb6j6                 Started container scaletestapp
+22m         Normal    ScalingReplicaSet              deployment/scaletestapp                           Scaled up replica set scaletestapp-866dd9cf84 from 0 to 1
+22m         Normal    Created                        pod/scaletestapp-866dd9cf84-lb6j6                 Created container: scaletestapp
+22m         Normal    Scheduled                      pod/scaletestapp-866dd9cf84-lb6j6                 Successfully assigned default/scaletestapp-866dd9cf84-lb6j6 to minikube
+22m         Normal    Pulled                         pod/scaletestapp-866dd9cf84-lb6j6                 Container image "ghcr.io/yandex-practicum/scaletestapp:latest" already present on machine
+22m         Warning   FailedGetResourceMetric        horizontalpodautoscaler/scaletestapp-hpa-memory   failed to get memory utilization: unable to get metrics for resource memory: no metrics returned from resource metrics API
+22m         Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/scaletestapp-hpa-memory   invalid metrics (1 invalid out of 1), first error is: failed to get memory resource metric value: failed to get memory utilization: unable to get metrics for resource memory: no metrics returned from resource metrics API
+2m5s        Normal    Scheduled                      pod/scaletestapp-866dd9cf84-ccpp7                 Successfully assigned default/scaletestapp-866dd9cf84-ccpp7 to minikube
+2m5s        Normal    SuccessfulCreate               replicaset/scaletestapp-866dd9cf84                Created pod: scaletestapp-866dd9cf84-ccpp7
+2m5s        Normal    SuccessfulRescale              horizontalpodautoscaler/scaletestapp-hpa-memory   New size: 2; reason: memory resource utilization (percentage of request) above target
+2m5s        Normal    ScalingReplicaSet              deployment/scaletestapp                           Scaled up replica set scaletestapp-866dd9cf84 from 1 to 2
+2m4s        Normal    Started                        pod/scaletestapp-866dd9cf84-ccpp7                 Started container scaletestapp
+2m4s        Normal    Pulled                         pod/scaletestapp-866dd9cf84-ccpp7                 Container image "ghcr.io/yandex-practicum/scaletestapp:latest" already present on machine
+2m4s        Normal    Created                        pod/scaletestapp-866dd9cf84-ccpp7                 Created container: scaletestapp

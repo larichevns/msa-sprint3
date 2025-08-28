@@ -1,0 +1,88 @@
+# Values for kube-prometheus-stack Helm chart
+# Минимальная конфигурация для локального Minikube кластера
+
+prometheus:
+  prometheusSpec:
+    # Настройки для экономии ресурсов в Minikube
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 100m
+      limits:
+        memory: 600Mi
+        cpu: 200m
+    
+    # Интервал сбора метрик
+    scrapeInterval: "15s"
+    evaluationInterval: "15s"
+    
+    # Хранение данных (для локального тестирования)
+    retention: 6h
+    
+    # ServiceMonitor selector для автоматического обнаружения
+    serviceMonitorSelector:
+      matchLabels:
+        prometheus: kube-prometheus
+    
+    # Дополнительные scrape configs
+    additionalScrapeConfigs:
+    - job_name: 'scaletestapp'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - default
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: scaletestapp
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+
+grafana:
+  # Отключаем Grafana для экономии ресурсов (можем использовать Prometheus UI)
+  enabled: false
+
+alertmanager:
+  # Отключаем Alertmanager для упрощения
+  enabled: false
+
+# Минимизируем ресурсы для node-exporter
+nodeExporter:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 10m
+      memory: 30Mi
+
+# Минимизируем ресурсы для kube-state-metrics
+kubeStateMetrics:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 100Mi
+    requests:
+      cpu: 10m
+      memory: 50Mi
+
+# Prometheus Operator настройки
+prometheusOperator:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 200Mi
+    requests:
+      cpu: 50m
+      memory: 100Mi

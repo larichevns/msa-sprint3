@@ -1,0 +1,7 @@
+NAME                            READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+scaletestapp-866dd9cf84-6zrtz   1/1     Running   0          4m      10.244.0.15   minikube   <none>           <none>
+scaletestapp-866dd9cf84-8v247   1/1     Running   0          3m30s   10.244.0.18   minikube   <none>           <none>
+scaletestapp-866dd9cf84-hmsc2   1/1     Running   0          3m30s   10.244.0.19   minikube   <none>           <none>
+scaletestapp-866dd9cf84-lb6j6   1/1     Running   0          37m     10.244.0.4    minikube   <none>           <none>
+scaletestapp-866dd9cf84-lglcv   1/1     Running   0          3m30s   10.244.0.20   minikube   <none>           <none>
+scaletestapp-866dd9cf84-nntnp   1/1     Running   0          4m      10.244.0.16   minikube   <none>           <none>

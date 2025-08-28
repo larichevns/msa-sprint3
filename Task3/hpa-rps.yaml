@@ -1,0 +1,49 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scaletestapp-hpa-rps
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scaletestapp
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  # Масштабирование на основе RPS (requests per second) на под
+  - type: Pods
+    pods:
+      metric:
+        name: requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "10"  # Целевое значение: 10 RPS на под
+  # Альтернативная метрика (можно использовать вместо или вместе с requests_per_second)
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "10"  # 10 RPS на под
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 120  # Ждем 2 минуты перед уменьшением
+      policies:
+      - type: Percent
+        value: 50  # Уменьшаем не более чем на 50%
+        periodSeconds: 60
+      - type: Pods
+        value: 1  # Или уменьшаем на 1 под
+        periodSeconds: 60
+      selectPolicy: Min  # Выбираем минимальное изменение
+    scaleUp:
+      stabilizationWindowSeconds: 30  # Быстрое масштабирование вверх
+      policies:
+      - type: Percent
+        value: 100  # Можем удвоить количество подов
+        periodSeconds: 30
+      - type: Pods
+        value: 3  # Или добавить 3 пода
+        periodSeconds: 30
+      selectPolicy: Max  # Выбираем максимальное изменение

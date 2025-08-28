@@ -1,0 +1,120 @@
+{
+  "status": "success",
+  "data": {
+    "resultType": "vector",
+    "result": [
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "app": "scaletestapp",
+          "instance": "10.244.0.5:8080",
+          "job": "kubernetes-pods",
+          "kubernetes_namespace": "default",
+          "kubernetes_pod_name": "scaletestapp-866dd9cf84-ccpp7",
+          "pod_template_hash": "866dd9cf84"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "app": "scaletestapp",
+          "instance": "10.244.0.4:8080",
+          "job": "kubernetes-pods",
+          "kubernetes_namespace": "default",
+          "kubernetes_pod_name": "scaletestapp-866dd9cf84-lb6j6",
+          "pod_template_hash": "866dd9cf84"
+        },
+        "value": [
+          1756360028.867,
+          "3906"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "instance": "10.244.0.5:8080",
+          "job": "scaletestapp",
+          "namespace": "default",
+          "pod": "scaletestapp-866dd9cf84-ccpp7"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "instance": "10.244.0.4:8080",
+          "job": "scaletestapp",
+          "namespace": "default",
+          "pod": "scaletestapp-866dd9cf84-lb6j6"
+        },
+        "value": [
+          1756360028.867,
+          "3906"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "app": "scaletestapp",
+          "instance": "10.244.0.10:8080",
+          "job": "kubernetes-pods",
+          "kubernetes_namespace": "default",
+          "kubernetes_pod_name": "scaletestapp-866dd9cf84-fwbc7",
+          "pod_template_hash": "866dd9cf84"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "instance": "10.244.0.10:8080",
+          "job": "scaletestapp",
+          "namespace": "default",
+          "pod": "scaletestapp-866dd9cf84-fwbc7"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "instance": "10.244.0.11:8080",
+          "job": "scaletestapp",
+          "namespace": "default",
+          "pod": "scaletestapp-866dd9cf84-b7sg5"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "http_requests_total",
+          "app": "scaletestapp",
+          "instance": "10.244.0.11:8080",
+          "job": "kubernetes-pods",
+          "kubernetes_namespace": "default",
+          "kubernetes_pod_name": "scaletestapp-866dd9cf84-b7sg5",
+          "pod_template_hash": "866dd9cf84"
+        },
+        "value": [
+          1756360028.867,
+          "0"
+        ]
+      }
+    ]
+  }
+}

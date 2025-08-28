@@ -1,0 +1,271 @@
+@startuml NovaMarket Order Saga - Successful Flow
+title Order Processing Saga - Successful Scenario
+
+participant "Customer" as C
+participant "Order Service" as OS
+participant "Event Bus" as EB
+participant "Inventory Service" as IS
+participant "Payment Service" as PS
+participant "Delivery Service" as DS
+participant "Notification Service" as NS
+
+C -> OS: Create Order
+activate OS
+OS -> OS: Validate order data
+OS -> EB: Publish OrderCreated
+OS -> C: Order created (status: pending)
+deactivate OS
+
+EB -> IS: OrderCreated event
+activate IS
+IS -> IS: Check inventory
+IS -> IS: Reserve products
+IS -> EB: Publish InventoryReserved
+deactivate IS
+
+EB -> PS: InventoryReserved event
+activate PS
+PS -> PS: Process payment
+PS -> "External Payment Gateway": Charge card
+"External Payment Gateway" -> PS: Payment successful
+PS -> EB: Publish PaymentProcessed
+deactivate PS
+
+EB -> DS: PaymentProcessed event
+activate DS
+DS -> DS: Create delivery request
+DS -> "External Logistics": Schedule delivery
+"External Logistics" -> DS: Delivery scheduled
+DS -> EB: Publish DeliveryScheduled
+deactivate DS
+
+EB -> OS: DeliveryScheduled event
+activate OS
+OS -> OS: Update order status
+OS -> EB: Publish OrderCompleted
+deactivate OS
+
+EB -> NS: OrderCreated event
+activate NS
+NS -> C: Notification: Order created
+deactivate NS
+
+EB -> NS: OrderCompleted event
+activate NS
+NS -> C: Notification: Order completed
+deactivate NS
+
+@enduml
+
+@startuml NovaMarket Order Saga - Payment Failure Scenario
+title Order Processing Saga - Payment Failure with Compensation
+
+participant "Customer" as C
+participant "Order Service" as OS
+participant "Event Bus" as EB
+participant "Inventory Service" as IS
+participant "Payment Service" as PS
+participant "Notification Service" as NS
+
+C -> OS: Create Order
+activate OS
+OS -> OS: Validate order data
+OS -> EB: Publish OrderCreated
+OS -> C: Order created (status: pending)
+deactivate OS
+
+EB -> IS: OrderCreated event
+activate IS
+IS -> IS: Check inventory
+IS -> IS: Reserve products
+IS -> EB: Publish InventoryReserved
+deactivate IS
+
+EB -> PS: InventoryReserved event
+activate PS
+PS -> PS: Process payment
+PS -> "External Payment Gateway": Charge card
+"External Payment Gateway" -> PS: Payment failed (insufficient funds)
+PS -> EB: Publish PaymentFailed
+deactivate PS
+
+EB -> IS: PaymentFailed event
+activate IS
+Note right of IS: Compensation action
+IS -> IS: Release reserved products
+IS -> EB: Publish InventoryReleased
+deactivate IS
+
+EB -> OS: PaymentFailed event
+activate OS
+OS -> OS: Update order status to cancelled
+OS -> EB: Publish OrderCancelled
+deactivate OS
+
+EB -> NS: OrderCancelled event
+activate NS
+NS -> C: Notification: Order cancelled (payment failed)
+deactivate NS
+
+@enduml
+
+@startuml NovaMarket Order Saga - Inventory Failure Scenario
+title Order Processing Saga - Inventory Reservation Failure
+
+participant "Customer" as C
+participant "Order Service" as OS
+participant "Event Bus" as EB
+participant "Inventory Service" as IS
+participant "Notification Service" as NS
+
+C -> OS: Create Order
+activate OS
+OS -> OS: Validate order data
+OS -> EB: Publish OrderCreated
+OS -> C: Order created (status: pending)
+deactivate OS
+
+EB -> IS: OrderCreated event
+activate IS
+IS -> IS: Check inventory
+IS -> IS: Product out of stock
+IS -> EB: Publish InventoryReservationFailed
+deactivate IS
+
+EB -> OS: InventoryReservationFailed event
+activate OS
+OS -> OS: Update order status to cancelled
+OS -> EB: Publish OrderCancelled
+deactivate OS
+
+EB -> NS: OrderCancelled event
+activate NS
+NS -> C: Notification: Order cancelled (product unavailable)
+deactivate NS
+
+@enduml
+
+@startuml NovaMarket Order Saga - Delivery Failure with Full Compensation
+title Order Processing Saga - Delivery Failure with Full Rollback
+
+participant "Customer" as C
+participant "Order Service" as OS
+participant "Event Bus" as EB
+participant "Inventory Service" as IS
+participant "Payment Service" as PS
+participant "Delivery Service" as DS
+participant "Notification Service" as NS
+
+C -> OS: Create Order
+activate OS
+OS -> OS: Validate order data
+OS -> EB: Publish OrderCreated
+OS -> C: Order created (status: pending)
+deactivate OS
+
+EB -> IS: OrderCreated event
+activate IS
+IS -> IS: Reserve products
+IS -> EB: Publish InventoryReserved
+deactivate IS
+
+EB -> PS: InventoryReserved event
+activate PS
+PS -> PS: Process payment
+PS -> EB: Publish PaymentProcessed
+deactivate PS
+
+EB -> DS: PaymentProcessed event
+activate DS
+DS -> DS: Create delivery request
+DS -> "External Logistics": Schedule delivery
+"External Logistics" -> DS: Delivery not available for address
+DS -> EB: Publish DeliverySchedulingFailed
+deactivate DS
+
+EB -> PS: DeliverySchedulingFailed event
+activate PS
+Note right of PS: Compensation action
+PS -> PS: Process refund
+PS -> "External Payment Gateway": Refund payment
+PS -> EB: Publish PaymentRefunded
+deactivate PS
+
+EB -> IS: DeliverySchedulingFailed event
+activate IS
+Note right of IS: Compensation action
+IS -> IS: Release reserved products
+IS -> EB: Publish InventoryReleased
+deactivate IS
+
+EB -> OS: DeliverySchedulingFailed event
+activate OS
+OS -> OS: Update order status to cancelled
+OS -> EB: Publish OrderCancelled
+deactivate OS
+
+EB -> NS: OrderCancelled event
+activate NS
+NS -> C: Notification: Order cancelled (delivery unavailable)
+deactivate NS
+
+@enduml
+
+@startuml NovaMarket Order Saga - Timeout Scenario
+title Order Processing Saga - Payment Timeout
+
+participant "Customer" as C
+participant "Order Service" as OS
+participant "Event Bus" as EB
+participant "Inventory Service" as IS
+participant "Payment Service" as PS
+participant "Notification Service" as NS
+participant "Timer" as T
+
+C -> OS: Create Order
+activate OS
+OS -> OS: Validate order data
+OS -> EB: Publish OrderCreated
+OS -> C: Order created (status: pending)
+deactivate OS
+
+EB -> IS: OrderCreated event
+activate IS
+IS -> IS: Reserve products
+IS -> EB: Publish InventoryReserved
+deactivate IS
+
+EB -> PS: InventoryReserved event
+activate PS
+PS -> PS: Start payment processing
+PS -> T: Set payment timeout (15 min)
+PS -> "External Payment Gateway": Charge card
+deactivate PS
+
+T -> T: Wait 15 minutes
+T -> EB: Publish PaymentTimeout
+
+EB -> PS: PaymentTimeout event
+activate PS
+PS -> PS: Cancel payment processing
+deactivate PS
+
+EB -> IS: PaymentTimeout event
+activate IS
+Note right of IS: Compensation action
+IS -> IS: Release reserved products
+IS -> EB: Publish InventoryReleased
+deactivate IS
+
+EB -> OS: PaymentTimeout event
+activate OS
+OS -> OS: Update order status to cancelled
+OS -> EB: Publish OrderCancelled
+deactivate OS
+
+EB -> NS: OrderCancelled event
+activate NS
+NS -> C: Notification: Order cancelled (payment timeout)
+deactivate NS
+
+@enduml

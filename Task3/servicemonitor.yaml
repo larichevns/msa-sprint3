@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scaletestapp-monitor
+  labels:
+    app: scaletestapp
+    prometheus: kube-prometheus  # Label для Prometheus discovery
+spec:
+  selector:
+    matchLabels:
+      app: scaletestapp
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+    scrapeTimeout: 10s
+    scheme: http
+    relabelings:
+    # Добавляем метки для удобства работы с метриками
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      targetLabel: pod
+    - sourceLabels: [__meta_kubernetes_namespace]
+      targetLabel: namespace
+    - sourceLabels: [__meta_kubernetes_service_name]
+      targetLabel: service
