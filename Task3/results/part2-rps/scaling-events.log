@@ -1,0 +1,17 @@
+LAST SEEN   TYPE     REASON              OBJECT                                         MESSAGE
+8m12s       Normal   ScalingReplicaSet   deployment/prometheus-adapter                  Scaled up replica set prometheus-adapter-5c4d97d7d5 from 0 to 1
+13m         Normal   ScalingReplicaSet   deployment/prometheus-kube-state-metrics       Scaled up replica set prometheus-kube-state-metrics-84c8f97df7 from 0 to 1
+13m         Normal   ScalingReplicaSet   deployment/prometheus-prometheus-pushgateway   Scaled up replica set prometheus-prometheus-pushgateway-65ddfcc6c4 from 0 to 1
+13m         Normal   ScalingReplicaSet   deployment/prometheus-server                   Scaled up replica set prometheus-server-6dfd59d94b from 0 to 1
+11m         Normal   ScalingReplicaSet   deployment/prometheus-server                   Scaled down replica set prometheus-server-6dfd59d94b from 1 to 0
+11m         Normal   ScalingReplicaSet   deployment/prometheus-server                   Scaled up replica set prometheus-server-6885bf6869 from 0 to 1
+37m         Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 0 to 1
+16m         Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 1 to 2
+10m         Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 2 to 3
+9m46s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 3 to 4
+7m46s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 4 to 5
+6m46s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 5 to 6
+5m36s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled down replica set scaletestapp-866dd9cf84 from 6 to 1
+3m51s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 1 to 4
+3m21s       Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled up replica set scaletestapp-866dd9cf84 from 4 to 7
+20s         Normal   ScalingReplicaSet   deployment/scaletestapp                        Scaled down replica set scaletestapp-866dd9cf84 from 7 to 6

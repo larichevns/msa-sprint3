@@ -1,0 +1,37 @@
+Name:                                  scaletestapp-hpa-rps
+Namespace:                             default
+Labels:                                <none>
+Annotations:                           <none>
+CreationTimestamp:                     Thu, 28 Aug 2025 09:50:45 +0400
+Reference:                             Deployment/scaletestapp
+Metrics:                               ( current / target )
+  "requests_per_second" on pods:       0 / 10
+  "http_requests_per_second" on pods:  0 / 10
+Min replicas:                          1
+Max replicas:                          10
+Behavior:
+  Scale Up:
+    Stabilization Window: 30 seconds
+    Select Policy: Max
+    Policies:
+      - Type: Percent  Value: 100  Period: 30 seconds
+      - Type: Pods     Value: 3    Period: 30 seconds
+  Scale Down:
+    Stabilization Window: 120 seconds
+    Select Policy: Min
+    Policies:
+      - Type: Percent  Value: 50  Period: 60 seconds
+      - Type: Pods     Value: 1   Period: 60 seconds
+Deployment pods:       7 current / 6 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    SucceededRescale  the HPA controller was able to update the target scale to 6
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from pods metric http_requests_per_second
+  ScalingLimited  True    ScaleDownLimit    the desired replica count is decreasing faster than the maximum scale rate
+Events:
+  Type    Reason             Age    From                       Message
+  ----    ------             ----   ----                       -------
+  Normal  SuccessfulRescale  3m36s  horizontal-pod-autoscaler  New size: 4; reason: pods metric http_requests_per_second above target
+  Normal  SuccessfulRescale  3m6s   horizontal-pod-autoscaler  New size: 7; reason: pods metric requests_per_second above target
+  Normal  SuccessfulRescale  5s     horizontal-pod-autoscaler  New size: 6; reason: All metrics below target
